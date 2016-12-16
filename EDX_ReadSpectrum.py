@@ -7,18 +7,19 @@ import struct
 import numpy as np
 import tkinter as tk
 from tkinter import filedialog
+from os import listdir
 
 root = tk.Tk()
-filelist = filedialog.askopenfilenames()
-#root.destroy()
+directory = filedialog.askdirectory(title="Select the folder containing the spectra:", mustexist=True)
+root.destroy()
 
-directory = "F:\\"
+filelist = listdir(directory)
 output = np.arange(1,2087,dtype="uint32")
 
 print("----- start -----")
 for file in filelist:
     if file.endswith(".spc"):
-        with open(file, "rb") as f:
+        with open(directory+"\\"+file, "rb") as f:
             data = np.zeros([2086],dtype="uint32")
             i = 0
         
@@ -33,11 +34,7 @@ for file in filelist:
 output = np.delete(output, (0), axis=1)
 output = np.transpose(output)
 
-#root = tk.Tk()
-SaveFile = filedialog.askopenfilename()
-root.destroy()
 
-np.savetxt(SaveFile, output, fmt="%1.1d", delimiter=";")
+np.savetxt(directory+"\\output.csv", output, fmt="%1.1d", delimiter=";")
     
 print("===== finished =====")
-print(output)
